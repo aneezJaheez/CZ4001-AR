@@ -9,6 +9,7 @@ TagManager:
   - Artwork
   - Close
   - Model
+  - Trigger
   layers:
   - Default
   - TransparentFX

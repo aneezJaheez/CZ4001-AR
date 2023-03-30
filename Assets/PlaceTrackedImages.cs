@@ -64,11 +64,11 @@ public class PlaceTrackedImages : MonoBehaviour
         foreach (var trackedImage in eventArgs.removed)
         {
             // Destroy its prefab
-            Destroy(_instantiatedPrefabs[trackedImage.referenceImage.name]);
+            //Destroy(_instantiatedPrefabs[trackedImage.referenceImage.name]);
             // Also remove the instance from our array
-            _instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
+            //_instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
             // Or, simply set the prefab instance to inactive
-            //_instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
+            _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
         }
     }
 }
