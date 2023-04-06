@@ -7,8 +7,13 @@ using UnityEngine.XR.ARSubsystems;
 [RequireComponent(typeof(ARTrackedImageManager))]
 public class PlaceTrackedImages : MonoBehaviour
 {
+
+    ARPlaceObjectsOnPlane activateModel;
+
     // Reference to AR tracked image manager component
     private ARTrackedImageManager _trackedImagesManager;
+    ARRaycastManager arrayman;
+    ARPlaneManager arplneman;
 
     // List of prefabs to instantiate - these should be named the same
     // as their corresponding 2D images in the reference image library 
@@ -26,6 +31,14 @@ public class PlaceTrackedImages : MonoBehaviour
     //   && !_instantiatedPrefabs.ContainsKey(imageName)){
     // Instantiate the prefab, parenting it to the ARTrackedImage
     //  var newPrefab = Instantiate(curPrefab, trackedImage.transform);
+    private void Start()
+    {
+        activateModel = FindObjectOfType<ARPlaceObjectsOnPlane>();
+        arrayman = GetComponent<ARRaycastManager>();
+        arplneman = GetComponent<ARPlaneManager>();
+        arrayman.enabled = false;
+        arplneman.enabled = false;
+    }
     void Awake()
     {
         _trackedImagesManager = GetComponent<ARTrackedImageManager>();
@@ -40,6 +53,7 @@ public class PlaceTrackedImages : MonoBehaviour
     }
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
+
         foreach (var trackedImage in eventArgs.added)
         {
             var imageName = trackedImage.referenceImage.name;
@@ -50,6 +64,11 @@ public class PlaceTrackedImages : MonoBehaviour
                 {
                     var newPrefab = Instantiate(curPrefab, trackedImage.transform);
                     _instantiatedPrefabs[imageName] = newPrefab;
+                    activateModel.activate3DModels();
+                    arrayman.enabled = true;
+                    arplneman.enabled = true;
+
+
                 }
             }
 
