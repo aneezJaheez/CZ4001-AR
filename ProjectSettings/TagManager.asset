@@ -10,6 +10,7 @@ TagManager:
   - Close
   - Model
   - Trigger
+  - hasInfo
   layers:
   - Default
   - TransparentFX

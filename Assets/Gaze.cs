@@ -9,7 +9,7 @@ public class Gaze : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        infos = FindObjectsOfType<InfoBehaviour>().ToList();
+        infos = FindObjectsOfType<InfoBehaviour>(true).ToList();
         
     }
 

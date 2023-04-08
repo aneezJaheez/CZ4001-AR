@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FaceCamera : MonoBehaviour
@@ -17,8 +15,7 @@ public class FaceCamera : MonoBehaviour
     {
         transform.LookAt(cam);
         targetAngle = transform.localEulerAngles;
-        targetAngle.x = 0; targetAngle.y=0;
+        targetAngle.x = 0; targetAngle.z=0;
         transform.localEulerAngles = targetAngle;   
-        
     }
 }
