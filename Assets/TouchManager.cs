@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class TouchManager : MonoBehaviour
 {
-    public GameObject panel, horse_model;
+    public GameObject panel, model;
     // Start is called before the first frame update
     void Start()
     {
         panel.SetActive(false);
-        horse_model.SetActive(false);
+        model.SetActive(false);
     }
 
     // Update is called once per frame
@@ -39,9 +39,9 @@ public class TouchManager : MonoBehaviour
                     }
                     else if (hit.collider.tag == "Model") 
                     {
-                        if (horse_model.activeSelf == false)
-                            horse_model.SetActive(true);
-                        else horse_model.SetActive(false);
+                        if (model.activeSelf == false)
+                            model.SetActive(true);
+                        else model.SetActive(false);
 
 
                     }

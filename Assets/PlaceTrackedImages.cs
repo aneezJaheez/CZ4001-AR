@@ -64,7 +64,8 @@ public class PlaceTrackedImages : MonoBehaviour
                 {
                     var newPrefab = Instantiate(curPrefab, trackedImage.transform);
                     _instantiatedPrefabs[imageName] = newPrefab;
-                    activateModel.activate3DModels();
+                    activateModel.addPrefabs(newPrefab);
+                    //activateModel.activate3DModels();
                     arrayman.enabled = true;
                     arplneman.enabled = true;
 
@@ -87,7 +88,7 @@ public class PlaceTrackedImages : MonoBehaviour
             // Also remove the instance from our array
             //_instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
             // Or, simply set the prefab instance to inactive
-            _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
+            //_instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
         }
     }
 }
