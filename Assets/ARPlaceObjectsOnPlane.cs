@@ -44,24 +44,28 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        int cur = 0;
         foreach (var instantiatedPrefab in instantiatedPrefabs)
         {
-            bool positionSet = positionSetList[instantiatedPrefabs.IndexOf(instantiatedPrefab)];
+            bool positionSet = positionSetList[cur];
             GameObject contents = instantiatedPrefab.transform.GetChild(0).gameObject;
             GameObject model = contents.transform.GetChild(10).gameObject;
             if (model.activeSelf)
             {
-                if(!positionSet && m_RaycastManager.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f)), s_Hits, TrackableType.PlaneEstimated))
+                if(!positionSet && m_RaycastManager.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f)), s_Hits, TrackableType.Planes))
                 {
                     positionSetList[instantiatedPrefabs.IndexOf(instantiatedPrefab)] = true;
-                    Pose hitPose = s_Hits[0].pose;
+                    //Pose hitPose = s_Hits[0].pose;
+                    Pose hitPose = s_Hits[0].sessionRelativePose;
                     model.transform.position = hitPose.position;
+                    model.transform.rotation = hitPose.rotation;
                 }
             }
             else
             {
                 positionSetList[instantiatedPrefabs.IndexOf(instantiatedPrefab)] = false;
             }
+            cur++;
         }
 
         /*if (m_RaycastManager.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f)), s_Hits, TrackableType.PlaneWithinPolygon) && objectGenerated == false && namecardDetected == true) 

@@ -53,7 +53,8 @@ public class PlaceTrackedImages : MonoBehaviour
     }
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-
+        arrayman.enabled = true;
+        arplneman.enabled = true;
         foreach (var trackedImage in eventArgs.added)
         {
             var imageName = trackedImage.referenceImage.name;
@@ -66,10 +67,6 @@ public class PlaceTrackedImages : MonoBehaviour
                     _instantiatedPrefabs[imageName] = newPrefab;
                     activateModel.addPrefabs(newPrefab);
                     //activateModel.activate3DModels();
-                    //arrayman.enabled = true;
-                    //arplneman.enabled = true;
-
-
                 }
             }
 
