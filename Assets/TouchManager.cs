@@ -2,15 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
+using TMPro;
 
 public class TouchManager : MonoBehaviour
 {
-    public GameObject panel, horse_model;
+    public GameObject panelVideo, horse_model,panelArtwork;
+    //public TextMeshProUGUI text_change;
+    public ARSession session;
+    public GameObject GameObjectToPlace;
+    public ARCameraManager cam;
     // Start is called before the first frame update
     void Start()
     {
-        panel.SetActive(false);
-        horse_model.SetActive(false);
+        panelVideo.SetActive(false);
+        horse_model.SetActive(false); 
+        panelArtwork.SetActive(false);
     }
 
     // Update is called once per frame
@@ -29,18 +36,41 @@ public class TouchManager : MonoBehaviour
                     //Color newColor = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
                     //hit.collider.GetComponent<MeshRenderer>().material.color = newColor;
 
-                    if (hit.collider.tag == "Artwork")
+                    if (hit.collider.tag == "ArtworkVideo")
                     {
-                        if (panel.activeSelf == false)
-                            panel.SetActive(true);
-                        else panel.SetActive(false);
+                        if (panelVideo.activeSelf == false)
+                        {
+                            panelVideo.SetActive(true);
+                            if (panelArtwork.activeSelf == true)
+                                panelArtwork.SetActive(false);
+                        }
+                        else panelVideo.SetActive(false);
 
 
                     }
-                    else if (hit.collider.tag == "Model") 
+
+                    else if (hit.collider.tag == "ArtworkPainting")
+                    {
+
+                        if (panelArtwork.activeSelf == false)
+                        {
+                            panelArtwork.SetActive(true);
+
+                            if (panelVideo.activeSelf == true)
+                                panelVideo.SetActive(false);
+                        }
+
+                        else panelArtwork.SetActive(false);
+                    }
+                    else if (hit.collider.tag == "Model")
                     {
                         if (horse_model.activeSelf == false)
+                        {
                             horse_model.SetActive(true);
+                            panelArtwork.SetActive(false);
+                            panelVideo.SetActive(false);
+                        }
+
                         else horse_model.SetActive(false);
 
 
@@ -50,16 +80,18 @@ public class TouchManager : MonoBehaviour
                     else if (hit.collider.tag == "WebsiteURL")
                     {
 
-                        if (panel.activeSelf == true)
-                            panel.SetActive(false);
+                        if (panelVideo.activeSelf == true || panelArtwork.activeSelf == true)
+                            panelVideo.SetActive(false);
+                            panelArtwork.SetActive(false);
 
                         Application.OpenURL("https://www.nationalgallery.sg/");
                     }
 
                     else if (hit.collider.tag == "LinkedIn")
                     {
-                        if (panel.activeSelf == true)
-                            panel.SetActive(false);
+                        if (panelVideo.activeSelf == true || panelArtwork.activeSelf == true)
+                            panelVideo.SetActive(false);
+                            panelArtwork.SetActive(false);
                     }
 
                 }

@@ -14,6 +14,7 @@ public class PlaceTrackedImages : MonoBehaviour
     private ARTrackedImageManager _trackedImagesManager;
     ARRaycastManager arrayman;
     ARPlaneManager arplneman;
+    bool object_generated, namecard_detection;
 
     // List of prefabs to instantiate - these should be named the same
     // as their corresponding 2D images in the reference image library 
@@ -64,19 +65,40 @@ public class PlaceTrackedImages : MonoBehaviour
                 {
                     var newPrefab = Instantiate(curPrefab, trackedImage.transform);
                     _instantiatedPrefabs[imageName] = newPrefab;
-                    activateModel.activate3DModels();
                     arrayman.enabled = true;
                     arplneman.enabled = true;
-
-
+                    activateModel.activate3DModels();
                 }
+
             }
 
         }
 
         foreach (var trackedImage in eventArgs.updated)
         {
+            var imageName = trackedImage.referenceImage.name;
             _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(trackedImage.trackingState == TrackingState.Tracking);
+
+            if (_instantiatedPrefabs.ContainsKey(imageName))
+            {
+                // if namecard reappears...
+                if (_instantiatedPrefabs[trackedImage.referenceImage.name].activeSelf == true) 
+                {
+                    activateModel.activate3DModels();
+
+                }
+                object_generated = activateModel.returnObjectGenerated();
+                namecard_detection = activateModel.namecardDetection();
+
+                if (object_generated == false && namecard_detection == true)
+                {
+                    arrayman.enabled = true;
+                    arplneman.enabled = true;
+                    activateModel.activate3DModels();
+                }
+
+            }
+
         }
 
 
@@ -88,6 +110,8 @@ public class PlaceTrackedImages : MonoBehaviour
             //_instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
             // Or, simply set the prefab instance to inactive
             _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
+
         }
     }
+
 }

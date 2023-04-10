@@ -33,6 +33,28 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
         namecardDetected = true;
     }
 
+    public void deactivate3DModels()
+    {
+        namecardDetected = false;
+    }
+
+    public void object_deactivate() 
+    {
+        objectGenerated = false;
+    }
+
+
+    public bool returnObjectGenerated() 
+    {
+        return objectGenerated;
+    }
+
+    public bool namecardDetection()
+    {
+        return namecardDetected;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -44,8 +66,6 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
             arrayman.enabled = false;
             arplneman.enabled = false;
             /*GameObject gallery = Instantiate(GameObjectToPlace, hitPose.position, hitPose.rotation);*/
-
-
 
             if (!GameObjectToPlace.active) 
             {

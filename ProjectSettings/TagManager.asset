@@ -11,6 +11,9 @@ TagManager:
   - Model
   - Trigger
   - hasInfo
+  - ArtworkVideo
+  - ArtworkPainting
+  - reset
   layers:
   - Default
   - TransparentFX
