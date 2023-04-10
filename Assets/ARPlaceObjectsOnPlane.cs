@@ -49,16 +49,6 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
             bool positionSet = positionSetList[instantiatedPrefabs.IndexOf(instantiatedPrefab)];
             GameObject contents = instantiatedPrefab.transform.GetChild(0).gameObject;
             GameObject model = contents.transform.GetChild(10).gameObject;
-            if (contents.activeSelf)
-            {
-                arrayman.enabled = true;
-                arplneman.enabled = true;
-            }
-            else
-            {
-                arrayman.enabled = false;
-                arplneman.enabled = false;
-            }
             if (model.activeSelf)
             {
                 if(!positionSet && m_RaycastManager.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f)), s_Hits, TrackableType.PlaneEstimated))

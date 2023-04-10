@@ -66,8 +66,8 @@ public class PlaceTrackedImages : MonoBehaviour
                     _instantiatedPrefabs[imageName] = newPrefab;
                     activateModel.addPrefabs(newPrefab);
                     //activateModel.activate3DModels();
-                    arrayman.enabled = true;
-                    arplneman.enabled = true;
+                    //arrayman.enabled = true;
+                    //arplneman.enabled = true;
 
 
                 }
