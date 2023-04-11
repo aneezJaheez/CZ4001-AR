@@ -16,7 +16,6 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
     public bool objectGenerated = false;
     ARRaycastManager raycastManager;
     ARPlaneManager planeManager;
-    Vector2 outlineSize;
 
     static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
 
@@ -24,7 +23,6 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
     {
         raycastManager = GetComponent<ARRaycastManager>();
         planeManager = GetComponent<ARPlaneManager>();
-        outlineSize = outline.GetComponent<MeshRenderer>().bounds.size;
     }
 
     private void Awake()
@@ -68,14 +66,6 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
         if (rayHit && objectGenerated == false && namecardDetected == true)
         {
             var pose = s_Hits[0].pose;
-            var plane = (ARPlane)s_Hits[0].trackable;
-
-            // not enough space
-            if (plane.size.x < outlineSize.x || plane.size.y < outlineSize.y)
-            {
-                outline.SetActive(false);
-                return;
-            }
 
             // set to face camera
             var cameraForward = Camera.current.transform.forward;
