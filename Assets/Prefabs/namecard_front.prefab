@@ -469,7 +469,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.1396649, y: -0.24225518, z: 0.50401914}
   m_LocalScale: {x: 10, y: 10, z: 10}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7393331111775347881}
   - {fileID: 5015942454945532049}
@@ -2049,6 +2049,9 @@ MonoBehaviour:
   panelVideo: {fileID: 3914497523737848814}
   horse_model: {fileID: 7729927254308819988}
   panelArtwork: {fileID: 4046385294487684834}
+  session: {fileID: 0}
+  GameObjectToPlace: {fileID: 0}
+  cam: {fileID: 0}
 --- !u!1 &7393331111775347880
 GameObject:
   m_ObjectHideFlags: 0
@@ -2402,7 +2405,7 @@ Transform:
   m_GameObject: {fileID: 7393331112940362012}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3117286804702852721}
