@@ -94,9 +94,6 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
 
                 // to ensure reset works
                 resetSession.GameObjectToPlace = gameObj;
-
-                raycastManager.enabled = false;
-                planeManager.enabled = false;
             }
         }
     }
