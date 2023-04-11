@@ -1,3 +1,4 @@
+using Lean.Touch;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -16,6 +17,8 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
     public bool objectGenerated = false;
     ARRaycastManager raycastManager;
     ARPlaneManager planeManager;
+    Pose hitPlanePose;
+    bool allowObjectPlacement;
 
     static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
 
@@ -28,6 +31,30 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
     private void Awake()
     {
         m_RaycastManager = GetComponent<ARRaycastManager>();
+    }
+
+    void OnEnable()
+    {
+        LeanTouch.OnFingerTap += HandleFingerTap;
+    }
+
+    void OnDisable()
+    {
+        LeanTouch.OnFingerTap -= HandleFingerTap;
+    }
+
+    private void HandleFingerTap(LeanFinger _)
+    {
+        if (!allowObjectPlacement) return;
+
+        // placing object if screen is touched
+        var gameObj = Instantiate(GameObjectToPlace, hitPlanePose.position, outline.transform.rotation);
+        gameObj.transform.localScale = outline.transform.localScale;
+        objectGenerated = true;
+        outline.SetActive(false);
+
+        // to ensure reset works
+        resetSession.GameObjectToPlace = gameObj;
     }
 
     public void activate3DModels()
@@ -65,26 +92,32 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
 
         if (rayHit && objectGenerated == false && namecardDetected == true)
         {
-            var pose = s_Hits[0].pose;
+            hitPlanePose = s_Hits[0].pose;
+            UpdateOutline();
+            allowObjectPlacement = true;
+        }
+        else
+        {
+            allowObjectPlacement = false;
+            outline.SetActive(false);
+        }
+    }
 
-            // set to face camera
-            var cameraForward = Camera.current.transform.forward;
-            var cameraBearing = new Vector3(cameraForward.x, 0, cameraForward.z).normalized;
-            pose.rotation = Quaternion.LookRotation(-cameraBearing);
+    void UpdateOutline()
+    {
+        // set to face camera
+        var cameraForward = Camera.current.transform.forward;
+        var cameraBearing = new Vector3(cameraForward.x, 0, cameraForward.z).normalized;
+        hitPlanePose.rotation = Quaternion.LookRotation(-cameraBearing);
 
+        if (outline.activeSelf)
+        {
+            outline.transform.position = hitPlanePose.position; // rotation is changed with gesture
+        }
+        else
+        {
             outline.SetActive(true);
-            outline.transform.SetPositionAndRotation(pose.position, pose.rotation);
-
-            // placing object if screen is touched
-            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-            {
-                var gameObj = Instantiate(GameObjectToPlace, pose.position, pose.rotation);
-                objectGenerated = true;
-                outline.SetActive(false);
-
-                // to ensure reset works
-                resetSession.GameObjectToPlace = gameObj;
-            }
+            outline.transform.SetPositionAndRotation(hitPlanePose.position, hitPlanePose.rotation);
         }
     }
 }
