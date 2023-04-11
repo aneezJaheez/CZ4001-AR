@@ -12,6 +12,7 @@ public class ResetSession : MonoBehaviour
         activateModel.deactivate3DModels();
         activateModel.object_deactivate();
 
-        GameObjectToPlace.SetActive(false);
+        if(GameObjectToPlace && GameObjectToPlace.activeSelf) 
+            GameObjectToPlace.SetActive(false);
     }
 }
