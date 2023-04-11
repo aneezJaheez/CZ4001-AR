@@ -20,8 +20,7 @@ public class NameCardAnimation : MonoBehaviour
     private float currentAngle = 0.0f;
     private int cardRotationSeq = 0; // 0 for first flip, 1 for second flip
 
-
-    void Start()
+    void Awake()
     {
         var middleCard = transform.GetChild(2).gameObject.transform;
         var topCard = transform.GetChild(1).gameObject.transform;
@@ -39,7 +38,6 @@ public class NameCardAnimation : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("Card animation enabled");
         image = transform.GetChild(0).gameObject.transform;
         // for non-card objects
         _childrenToMove = new();
