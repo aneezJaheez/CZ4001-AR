@@ -59,7 +59,7 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
             //objectGenerated = true;
             outline.SetActive(false);
             // to ensure reset works
-            resetSession.GameObjectToPlace = GameObjectToPlace;
+            //resetSession.GameObjectToPlace = GameObjectToPlace;
         }
     }
 

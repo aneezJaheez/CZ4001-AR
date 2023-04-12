@@ -182,4 +182,21 @@ public class PlaceTrackedImages : MonoBehaviour
         }
     }
 
+    public void resetAllModel()
+    {
+        foreach (KeyValuePair<string, GameObject> pair in _instantiatedPrefabs)
+        {
+            GameObject ARPrefabs = pair.Value;
+            Transform trans = ARPrefabs.transform;
+            Transform childTrans = trans.Find("Trigger_Script");
+            GameObject scriptObject;
+
+            if (childTrans != null)
+            {
+                scriptObject = childTrans.gameObject;
+                ButtonManager script = scriptObject.GetComponent<ButtonManager>();
+                script.disable_model();
+            }
+        }
+    }
 }

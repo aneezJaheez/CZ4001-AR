@@ -158,6 +158,14 @@ public class NameCardAnimation : MonoBehaviour
             cards[2].RotateAround(anchors[2].position, image.right, deltaAngle);
             currentAngle += deltaAngle;
         }
+        else if (cardRotationSeq == 2)
+        {
+            cards.ForEach(card =>
+            {
+                card.localRotation = Quaternion.Euler(0, 180, 0);
+            });
+            cardRotationSeq++;
+        }
     }
 }
 
