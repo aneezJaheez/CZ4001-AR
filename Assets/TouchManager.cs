@@ -7,18 +7,26 @@ using TMPro;
 
 public class TouchManager : MonoBehaviour
 {
-    public GameObject panelVideo, panelArtwork;
+    public GameObject panelPort, panelShoe, panelStarry, panelSkull, panelField;
     public GameObject scriptObject;
     ButtonManager script;
     //public TextMeshProUGUI text_change;
     // Start is called before the first frame update
     void Start()
     {
-        panelVideo.SetActive(false);
-        panelArtwork.SetActive(false);
+        setAllInactive();
         script = scriptObject.GetComponent<ButtonManager>();
     }
 
+    void setAllInactive() 
+    {
+        panelPort.SetActive(false);
+        panelShoe.SetActive(false);
+        panelStarry.SetActive(false);
+        panelSkull.SetActive(false);
+        panelField.SetActive(false);
+
+    }
     // Update is called once per frame
     void Update()
     {
@@ -30,41 +38,77 @@ public class TouchManager : MonoBehaviour
             
             if (Physics.Raycast(ray, out hit)) 
             {
-                if(hit.collider != null) 
+                if (hit.collider != null)
                 {
                     //Color newColor = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
                     //hit.collider.GetComponent<MeshRenderer>().material.color = newColor;
 
-                    if (hit.collider.tag == "ArtworkVideo")
+                    if (hit.collider.tag == "paintingShoe")
                     {
-                        if (panelVideo.activeSelf == false)
+                        if (panelShoe.activeSelf == false)
                         {
-                            panelVideo.SetActive(true);
-                            if (panelArtwork.activeSelf == true)
-                                panelArtwork.SetActive(false);
+                            setAllInactive();
+                            panelShoe.SetActive(true);
                         }
-                        else panelVideo.SetActive(false);
+                        else panelShoe.SetActive(false);
 
 
                     }
 
-                    else if (hit.collider.tag == "ArtworkPainting")
+                    else if (hit.collider.tag == "paintingPort")
                     {
-                        if (panelArtwork.activeSelf == false)
+                        if (panelPort.activeSelf == false)
                         {
-                            panelArtwork.SetActive(true);
 
-                            if (panelVideo.activeSelf == true)
-                                panelVideo.SetActive(false);
+                            setAllInactive();
+                            panelPort.SetActive(true);
+
                         }
-
-                        else panelArtwork.SetActive(false);
+                        else panelPort.SetActive(false);
                     }
+
+                    else if (hit.collider.tag == "paintingSkull")
+                    {
+                        if (panelSkull.activeSelf == false)
+                        {
+
+                            setAllInactive();
+                            panelSkull.SetActive(true);
+
+                        }
+                        else panelSkull.SetActive(false);
+                    }
+
+
+                    else if (hit.collider.tag == "paintingField")
+                    {
+                        if (panelField.activeSelf == false)
+                        {
+
+                            setAllInactive();
+                            panelField.SetActive(true);
+
+                        }
+                        else panelField.SetActive(false);
+                    }
+
+
+                    else if (hit.collider.tag == "paintingStarry")
+                    {
+                        if (panelStarry.activeSelf == false)
+                        {
+
+                            setAllInactive();
+                            panelStarry.SetActive(true);
+
+                        }
+                        else panelStarry.SetActive(false);
+                    }
+
 
                     else if (hit.collider.tag == "Model")
                     {
-                        panelArtwork.SetActive(false);
-                        panelVideo.SetActive(false);
+                        setAllInactive();
                         script.toggle_model();
                     }
 
@@ -72,21 +116,15 @@ public class TouchManager : MonoBehaviour
                     else if (hit.collider.tag == "WebsiteURL")
                     {
 
-                        if (panelVideo.activeSelf == true || panelArtwork.activeSelf == true)
-                            panelVideo.SetActive(false);
-                            panelArtwork.SetActive(false);
-
-                        Application.OpenURL("https://www.nationalgallery.sg/");
+                        setAllInactive();
+                        Application.OpenURL("https://www.vangoghmuseum.nl/en");
                     }
-
-                    else if (hit.collider.tag == "LinkedIn")
-                    {
-                        if (panelVideo.activeSelf == true || panelArtwork.activeSelf == true)
-                            panelVideo.SetActive(false);
-                            panelArtwork.SetActive(false);
-                    }
+                    else
+                      setAllInactive();
 
                 }
+
+                
             }
         }
 

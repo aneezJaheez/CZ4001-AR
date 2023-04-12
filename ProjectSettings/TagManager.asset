@@ -11,9 +11,12 @@ TagManager:
   - Model
   - Trigger
   - hasInfo
-  - ArtworkVideo
-  - ArtworkPainting
   - reset
+  - paintingStarry
+  - paintingPort
+  - paintingShoe
+  - paintingField
+  - paintingSkull
   layers:
   - Default
   - TransparentFX
