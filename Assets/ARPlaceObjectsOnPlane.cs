@@ -1,4 +1,5 @@
 using Lean.Touch;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -48,18 +49,24 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
         if (!allowObjectPlacement) return;
 
         // placing object if screen is touched
-        var gameObj = Instantiate(GameObjectToPlace, hitPlanePose.position, outline.transform.rotation);
-        gameObj.transform.localScale = outline.transform.localScale;
-        objectGenerated = true;
-        outline.SetActive(false);
-
-        // to ensure reset works
-        resetSession.GameObjectToPlace = gameObj;
+        if (GameObjectToPlace != null)
+        {
+            //var gameObj = Instantiate(GameObjectToPlace, hitPlanePose.position, outline.transform.rotation);
+            GameObjectToPlace.transform.position = hitPlanePose.position;
+            GameObjectToPlace.transform.rotation = outline.transform.rotation;
+            GameObjectToPlace.transform.localScale = outline.transform.localScale;
+            GameObjectToPlace.SetActive(true);
+            //objectGenerated = true;
+            outline.SetActive(false);
+            // to ensure reset works
+            resetSession.GameObjectToPlace = GameObjectToPlace;
+        }
     }
 
-    public void activate3DModels()
+    public void activate3DModels(GameObject modeltoplace)
     {
         namecardDetected = true;
+        GameObjectToPlace = modeltoplace;
     }
 
     public void deactivate3DModels()
@@ -87,8 +94,16 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var screenCenter = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-        var rayHit = m_RaycastManager.Raycast(screenCenter, s_Hits, TrackableType.PlaneWithinPolygon);
+        bool rayHit = false;
+        try
+        {
+            var screenCenter = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+            rayHit = m_RaycastManager.Raycast(screenCenter, s_Hits, TrackableType.PlaneWithinPolygon);
+        }
+        catch (Exception ex)
+        {
+            rayHit = false;
+        }
 
         if (rayHit && objectGenerated == false && namecardDetected == true)
         {

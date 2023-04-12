@@ -620,7 +620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d454968a8c1a8a4a90602f8b3fbe836, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameObjectToPlace: {fileID: 1617630675073967611, guid: b1f3dc4e41e059e46b779bb6b440c898, type: 3}
+  GameObjectToPlace: {fileID: 0}
   outline: {fileID: 1619193456}
   resetSession: {fileID: 65284399}
   namecardDetected: 0

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using System.Linq;
+using System.Xml.Linq;
 
 [RequireComponent(typeof(ARTrackedImageManager))]
 public class PlaceTrackedImages : MonoBehaviour
@@ -15,6 +17,7 @@ public class PlaceTrackedImages : MonoBehaviour
     ARRaycastManager arrayman;
     ARPlaneManager arplneman;
     bool object_generated, namecard_detection;
+    List<GameObject> ArPrefabsQueue = new List<GameObject>();
 
     // List of prefabs to instantiate - these should be named the same
     // as their corresponding 2D images in the reference image library 
@@ -22,6 +25,7 @@ public class PlaceTrackedImages : MonoBehaviour
 
 
     private readonly Dictionary<string, GameObject> _instantiatedPrefabs = new Dictionary<string, GameObject>();
+
     //  foreach(var trackedImage in eventArgs.added){
     // Get the name of the reference image
     //   var imageName = trackedImage.referenceImage.name;
@@ -54,7 +58,6 @@ public class PlaceTrackedImages : MonoBehaviour
     }
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-
         foreach (var trackedImage in eventArgs.added)
         {
             var imageName = trackedImage.referenceImage.name;
@@ -65,21 +68,41 @@ public class PlaceTrackedImages : MonoBehaviour
                 {
                     var newPrefab = Instantiate(curPrefab, trackedImage.transform);
                     _instantiatedPrefabs[imageName] = newPrefab;
-                    arrayman.enabled = true;
-                    arplneman.enabled = true;
-                    activateModel.activate3DModels();
+                    //arrayman.enabled = true;
+                    //arplneman.enabled = true;
+                    //activateModel.activate3DModels();
                 }
 
             }
 
         }
 
+        
+
         foreach (var trackedImage in eventArgs.updated)
         {
             var imageName = trackedImage.referenceImage.name;
-            _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(trackedImage.trackingState == TrackingState.Tracking);
-
-            if (_instantiatedPrefabs.ContainsKey(imageName))
+            //_instantiatedPrefabs[imageName].SetActive(trackedImage.trackingState == TrackingState.Tracking);
+            _instantiatedPrefabs[imageName].SetActive(true);
+            Transform trans = _instantiatedPrefabs[imageName].transform;
+            Transform childTrans = trans.Find("Sculptures");
+            Transform childTrans2 = trans.Find("Trigger_Script");
+            GameObject sculpture, scriptObject;
+            if (childTrans != null)
+            {
+                sculpture = childTrans.gameObject;
+                if (childTrans2 != null)
+                {
+                    scriptObject = childTrans2.gameObject;
+                    ButtonManager script = scriptObject.GetComponent<ButtonManager>();
+                    script.outofview = !(trackedImage.trackingState == TrackingState.Tracking);
+                    if (!sculpture.activeSelf && !ArPrefabsQueue.Contains(sculpture) && script.check_model_activation())
+                        ArPrefabsQueue.Add(sculpture);
+                    else if (ArPrefabsQueue.Contains(sculpture) && !script.check_model_activation())
+                        ArPrefabsQueue.Remove(sculpture);
+                }
+            }
+            /*if (_instantiatedPrefabs.ContainsKey(imageName))
             {
                 // if namecard reappears...
                 if (_instantiatedPrefabs[trackedImage.referenceImage.name].activeSelf == true) 
@@ -97,10 +120,9 @@ public class PlaceTrackedImages : MonoBehaviour
                     activateModel.activate3DModels();
                 }
 
-            }
+            }*/
 
         }
-
 
         foreach (var trackedImage in eventArgs.removed)
         {
@@ -109,8 +131,48 @@ public class PlaceTrackedImages : MonoBehaviour
             // Also remove the instance from our array
             //_instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
             // Or, simply set the prefab instance to inactive
-            _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
-
+            //_instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
+            var imageName = trackedImage.referenceImage.name;
+            //_instantiatedPrefabs[imageName].SetActive(true);
+            Transform trans = _instantiatedPrefabs[imageName].transform;
+            Transform childTrans = trans.Find("Sculptures");
+            Transform childTrans2 = trans.Find("Trigger_Script");
+            GameObject sculpture, scriptObject;
+            if (childTrans != null)
+            {
+                sculpture = childTrans.gameObject;
+                if (childTrans2 != null)
+                {
+                    scriptObject = childTrans2.gameObject;
+                    ButtonManager script = scriptObject.GetComponent<ButtonManager>();
+                    script.outofview = true;
+                    if (ArPrefabsQueue.Contains(sculpture))
+                        ArPrefabsQueue.Remove(sculpture);
+                }
+            }
+        }
+        //Debug.Log(ArPrefabsQueue.Count);
+        if (ArPrefabsQueue.Count > 0)
+        {
+            arrayman.enabled = true;
+            arplneman.enabled = true;
+            foreach (GameObject modeltoplace in ArPrefabsQueue)
+            {
+                if (!modeltoplace.activeSelf)
+                {
+                    activateModel.activate3DModels(modeltoplace);
+                    break;
+                } 
+                else
+                    ArPrefabsQueue.Remove(modeltoplace);
+            }
+            
+        }
+        else
+        {
+            arrayman.enabled = false;
+            arplneman.enabled = false;
+            activateModel.deactivate3DModels();
         }
     }
 

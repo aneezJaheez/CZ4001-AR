@@ -7,17 +7,16 @@ using TMPro;
 
 public class TouchManager : MonoBehaviour
 {
-    public GameObject panelVideo, horse_model,panelArtwork;
+    public GameObject panelVideo, panelArtwork;
+    public GameObject scriptObject;
+    ButtonManager script;
     //public TextMeshProUGUI text_change;
-    public ARSession session;
-    public GameObject GameObjectToPlace;
-    public ARCameraManager cam;
     // Start is called before the first frame update
     void Start()
     {
         panelVideo.SetActive(false);
-        horse_model.SetActive(false); 
         panelArtwork.SetActive(false);
+        script = scriptObject.GetComponent<ButtonManager>();
     }
 
     // Update is called once per frame
@@ -51,7 +50,6 @@ public class TouchManager : MonoBehaviour
 
                     else if (hit.collider.tag == "ArtworkPainting")
                     {
-
                         if (panelArtwork.activeSelf == false)
                         {
                             panelArtwork.SetActive(true);
@@ -62,18 +60,12 @@ public class TouchManager : MonoBehaviour
 
                         else panelArtwork.SetActive(false);
                     }
+
                     else if (hit.collider.tag == "Model")
                     {
-                        if (horse_model.activeSelf == false)
-                        {
-                            horse_model.SetActive(true);
-                            panelArtwork.SetActive(false);
-                            panelVideo.SetActive(false);
-                        }
-
-                        else horse_model.SetActive(false);
-
-
+                        panelArtwork.SetActive(false);
+                        panelVideo.SetActive(false);
+                        script.toggle_model();
                     }
 
 
