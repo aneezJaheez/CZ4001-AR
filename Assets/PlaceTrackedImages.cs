@@ -87,15 +87,18 @@ public class PlaceTrackedImages : MonoBehaviour
             Transform trans = _instantiatedPrefabs[imageName].transform;
             Transform childTrans = trans.Find("Sculptures");
             Transform childTrans2 = trans.Find("Trigger_Script");
-            GameObject sculpture, scriptObject;
+            Transform childTrans3 = trans.Find("Trigger_Button");
+            GameObject sculpture, button, scriptObject;
             if (childTrans != null)
             {
                 sculpture = childTrans.gameObject;
+                button = childTrans3.gameObject;
                 if (childTrans2 != null)
                 {
                     scriptObject = childTrans2.gameObject;
                     ButtonManager script = scriptObject.GetComponent<ButtonManager>();
                     script.outofview = !(trackedImage.trackingState == TrackingState.Tracking);
+                    button.SetActive(trackedImage.trackingState == TrackingState.Tracking);
                     if (!sculpture.activeSelf && !ArPrefabsQueue.Contains(sculpture) && script.check_model_activation())
                         ArPrefabsQueue.Add(sculpture);
                     else if (ArPrefabsQueue.Contains(sculpture) && !script.check_model_activation())
@@ -137,13 +140,16 @@ public class PlaceTrackedImages : MonoBehaviour
             Transform trans = _instantiatedPrefabs[imageName].transform;
             Transform childTrans = trans.Find("Sculptures");
             Transform childTrans2 = trans.Find("Trigger_Script");
-            GameObject sculpture, scriptObject;
+            Transform childTrans3 = trans.Find("Trigger_Button");
+            GameObject sculpture, button, scriptObject;
             if (childTrans != null)
             {
                 sculpture = childTrans.gameObject;
+                button = childTrans3.gameObject;
                 if (childTrans2 != null)
                 {
                     scriptObject = childTrans2.gameObject;
+                    button.SetActive(false);
                     ButtonManager script = scriptObject.GetComponent<ButtonManager>();
                     script.outofview = true;
                     if (ArPrefabsQueue.Contains(sculpture))

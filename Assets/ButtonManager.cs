@@ -13,6 +13,7 @@ public class ButtonManager : MonoBehaviour
     void Start()
     {
         contents.SetActive(false);
+        //cardanimation.SetActive(false);
         model.SetActive(false);
     }
 
@@ -46,8 +47,8 @@ public class ButtonManager : MonoBehaviour
         }
         if (activate_contents)
         {
-            if (cardanimation.activeSelf)
-                cardanimation.SetActive(true);
+            //if (!cardanimation.activeSelf)
+                //cardanimation.SetActive(true);
             if (!outofview && !contents.activeSelf)
             {
                 contents.SetActive(true);
@@ -60,7 +61,7 @@ public class ButtonManager : MonoBehaviour
         else
         {
             contents.SetActive(false);
-            cardanimation.SetActive(false);
+            //cardanimation.SetActive(false);
         }
     }
 }
