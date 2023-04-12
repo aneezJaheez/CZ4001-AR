@@ -14,7 +14,7 @@ public class NameCardAnimation : MonoBehaviour
     private Transform image;
     private List<Transform> cards = new();
     private List<Transform> anchors = new();
-    private List<Vector3> originalCards = new();
+    private List<Vector3> originalCardTransforms = new();
     private List<Vector3> originalObjTransforms = new(); // for non-card objects
 
     private float currentAngle = 0.0f;
@@ -25,7 +25,7 @@ public class NameCardAnimation : MonoBehaviour
         var middleCard = transform.GetChild(2).gameObject.transform;
         var topCard = transform.GetChild(1).gameObject.transform;
         var bottomCard = transform.GetChild(3).gameObject.transform;
-        originalCards = new()
+        originalCardTransforms = new()
         {
             middleCard.localPosition,
             topCard.localPosition,
@@ -52,22 +52,22 @@ public class NameCardAnimation : MonoBehaviour
         var firstAnchor = new GameObject().transform;
         var middleCard = transform.GetChild(2).gameObject.transform;
         firstAnchor.SetParent(transform, false);
-        firstAnchor.localPosition = Vector3.Lerp(image.localPosition, originalCards[0], 0.5f);
+        firstAnchor.localPosition = Vector3.Lerp(image.localPosition, originalCardTransforms[0], 0.5f);
 
         var secondAnchor = new GameObject().transform;
         var topCard = transform.GetChild(1).gameObject.transform;
         secondAnchor.SetParent(transform, false);
-        secondAnchor.localPosition = Vector3.Lerp(originalCards[0], originalCards[1], 0.5f);
+        secondAnchor.localPosition = Vector3.Lerp(originalCardTransforms[0], originalCardTransforms[1], 0.5f);
 
         var thirdAnchor = new GameObject().transform;
         var bottomCard = transform.GetChild(3).gameObject.transform;
         thirdAnchor.SetParent(transform, false);
-        thirdAnchor.localPosition = Vector3.Lerp(originalCards[0], originalCards[2], 0.5f);
+        thirdAnchor.localPosition = Vector3.Lerp(originalCardTransforms[0], originalCardTransforms[2], 0.5f);
 
         middleCard.localPosition = image.localPosition;
         middleCard.Rotate(0,0,-180);
 
-        // disable top bototm cards first
+        // disable top and bottom cards first
         topCard.gameObject.SetActive(false);
         bottomCard.gameObject.SetActive(false);
 
@@ -132,8 +132,8 @@ public class NameCardAnimation : MonoBehaviour
                 cards[1].localRotation = cards[0].localRotation;
                 cards[2].localRotation = cards[0].localRotation;
 
-                anchors[1].localPosition = Vector3.Lerp(cards[0].localPosition, originalCards[1], 0.5f);
-                anchors[2].localPosition = Vector3.Lerp(cards[0].localPosition, originalCards[2], 0.5f);
+                anchors[1].localPosition = Vector3.Lerp(cards[0].localPosition, originalCardTransforms[1], 0.5f);
+                anchors[2].localPosition = Vector3.Lerp(cards[0].localPosition, originalCardTransforms[2], 0.5f);
 
                 cards[1].Rotate(180, 0, 0);
                 cards[2].Rotate(-180, 0, 0);
@@ -156,6 +156,16 @@ public class NameCardAnimation : MonoBehaviour
             cards[1].RotateAround(anchors[1].position, -image.right, deltaAngle);
             cards[2].RotateAround(anchors[2].position, image.right, deltaAngle);
             currentAngle += deltaAngle;
+        }
+
+        // animation is over
+        if (cardRotationSeq == 2) {
+            // cards were over-rotating, fix to known angles
+            cards.ForEach(card =>
+            {
+                card.localRotation = Quaternion.Euler(0, 180, 0);
+            });
+            cardRotationSeq++;
         }
     }
 }
