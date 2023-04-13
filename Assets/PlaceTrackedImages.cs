@@ -17,7 +17,12 @@ public class PlaceTrackedImages : MonoBehaviour
     ARRaycastManager arrayman;
     ARPlaneManager arplneman;
     bool object_generated, namecard_detection;
+<<<<<<< Updated upstream
     List<GameObject> ArPrefabsQueue = new List<GameObject>();
+=======
+    ModelSelector modelSelector;
+    ImagesAnimation images;
+>>>>>>> Stashed changes
 
     // List of prefabs to instantiate - these should be named the same
     // as their corresponding 2D images in the reference image library 
@@ -39,6 +44,8 @@ public class PlaceTrackedImages : MonoBehaviour
     private void Start()
     {
         activateModel = FindObjectOfType<ARPlaceObjectsOnPlane>();
+        modelSelector = FindObjectOfType<ModelSelector>();
+        images = FindObjectOfType<ImagesAnimation>();
         arrayman = GetComponent<ARRaycastManager>();
         arplneman = GetComponent<ARPlaneManager>();
         arrayman.enabled = false;
@@ -58,6 +65,10 @@ public class PlaceTrackedImages : MonoBehaviour
     }
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
+<<<<<<< Updated upstream
+=======
+        int namecardavail = 0;
+>>>>>>> Stashed changes
         foreach (var trackedImage in eventArgs.added)
         {
             var imageName = trackedImage.referenceImage.name;
@@ -68,9 +79,17 @@ public class PlaceTrackedImages : MonoBehaviour
                 {
                     var newPrefab = Instantiate(curPrefab, trackedImage.transform);
                     _instantiatedPrefabs[imageName] = newPrefab;
+<<<<<<< Updated upstream
                     //arrayman.enabled = true;
                     //arplneman.enabled = true;
                     //activateModel.activate3DModels();
+=======
+                    arrayman.enabled = true;
+                    arplneman.enabled = true;
+
+                    // remove scanning UI
+                    modelSelector.RemoveScanningUI();
+>>>>>>> Stashed changes
                 }
 
             }
@@ -105,6 +124,7 @@ public class PlaceTrackedImages : MonoBehaviour
                         ArPrefabsQueue.Remove(sculpture);
                 }
             }
+<<<<<<< Updated upstream
             /*if (_instantiatedPrefabs.ContainsKey(imageName))
             {
                 // if namecard reappears...
@@ -125,6 +145,9 @@ public class PlaceTrackedImages : MonoBehaviour
 
             }*/
 
+=======
+            namecardavail += (trackedImage.trackingState == TrackingState.Tracking ? 0 : 1);
+>>>>>>> Stashed changes
         }
 
         foreach (var trackedImage in eventArgs.removed)
@@ -134,6 +157,7 @@ public class PlaceTrackedImages : MonoBehaviour
             // Also remove the instance from our array
             //_instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
             // Or, simply set the prefab instance to inactive
+<<<<<<< Updated upstream
             //_instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
             var imageName = trackedImage.referenceImage.name;
             //_instantiatedPrefabs[imageName].SetActive(true);
@@ -179,6 +203,21 @@ public class PlaceTrackedImages : MonoBehaviour
             arrayman.enabled = false;
             arplneman.enabled = false;
             activateModel.deactivate3DModels();
+=======
+            _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
+            namecardavail++;
+        }
+
+        if (namecardavail > 0)
+        {
+            modelSelector.StartScanningUI();
+            images.CloseImages();
+        }
+        else
+        {
+            modelSelector.RemoveScanningUI();
+            images.OpenImages();
+>>>>>>> Stashed changes
         }
     }
 

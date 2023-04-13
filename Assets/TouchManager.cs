@@ -18,7 +18,69 @@ public class TouchManager : MonoBehaviour
         script = scriptObject.GetComponent<ButtonManager>();
     }
 
+<<<<<<< Updated upstream
     void setAllInactive() 
+=======
+    void OnEnable()
+    {
+        LeanTouch.OnFingerTap += CardTouchHandler;
+    }
+
+    void OnDisable()
+    {
+        LeanTouch.OnFingerTap -= CardTouchHandler;
+    }
+
+    void CardTouchHandler(LeanFinger finger)
+    {
+        var touchedRay = Camera.main.ScreenPointToRay(finger.ScreenPosition);
+        if (Physics.Raycast(touchedRay, out RaycastHit hit))
+        {
+            if (hit.collider == null) return;
+            SetAllInactive();
+
+            switch (hit.collider.tag)
+            {
+                case "paintingShoe":
+                    if (!panelShoe.activeSelf)
+                        panelShoe.SetActive(true);
+                    else
+                        panelShoe.SetActive(false);
+                    break;
+                case "paintingPort":
+                    if (!panelPort.activeSelf)
+                        panelPort.SetActive(true);
+                    else
+                        panelPort.SetActive(false);
+                    break;
+                case "paintingSkull":
+                    if (!panelSkull.activeSelf)
+                        panelSkull.SetActive(true);
+                    else
+                        panelSkull.SetActive(false);
+                    break;
+                case "paintingField":
+                    if (!panelField.activeSelf)
+                        panelField.SetActive(true);
+                    else
+                        panelField.SetActive(false);
+                    break;
+                case "paintingStarry":
+                    if (!panelStarry.activeSelf)
+                        panelStarry.SetActive(true);
+                    else
+                        panelStarry.SetActive(false);
+                    break;
+                case "WebsiteURL":
+                    Application.OpenURL("https://www.vangoghmuseum.nl/en");
+                    break;
+                default: break;
+            }
+        }
+    }
+
+    void SetAllInactive()
+>>>>>>> Stashed changes
     {
         panelPort.SetActive(false);
         panelShoe.SetActive(false);
