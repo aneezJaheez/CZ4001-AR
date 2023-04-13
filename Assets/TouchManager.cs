@@ -33,34 +33,19 @@ public class TouchManager : MonoBehaviour
             switch (hit.collider.tag)
             {
                 case "paintingShoe":
-                    if (!panelShoe.activeSelf)
-                        panelShoe.SetActive(true);
-                    else
-                        panelShoe.SetActive(false);
+                    panelShoe.SetActive(true);
                     break;
                 case "paintingPort":
-                    if (!panelPort.activeSelf)
-                        panelPort.SetActive(true);
-                    else
-                        panelPort.SetActive(false);
+                    panelPort.SetActive(true);
                     break;
                 case "paintingSkull":
-                    if (!panelSkull.activeSelf)
-                        panelSkull.SetActive(true);
-                    else
-                        panelSkull.SetActive(false);
+                    panelSkull.SetActive(true);
                     break;
                 case "paintingField":
-                    if (!panelField.activeSelf)
-                        panelField.SetActive(true);
-                    else
-                        panelField.SetActive(false);
+                    panelField.SetActive(true);
                     break;
                 case "paintingStarry":
-                    if (!panelStarry.activeSelf)
-                        panelStarry.SetActive(true);
-                    else
-                        panelStarry.SetActive(false);
+                    panelStarry.SetActive(true);
                     break;
                 case "WebsiteURL":
                     Application.OpenURL("https://www.vangoghmuseum.nl/en");
@@ -68,6 +53,8 @@ public class TouchManager : MonoBehaviour
                 default: break;
             }
         }
+        else
+            SetAllInactive();
     }
 
     void SetAllInactive()
