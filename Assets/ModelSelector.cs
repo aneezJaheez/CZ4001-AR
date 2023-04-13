@@ -20,6 +20,11 @@ public class ModelSelector : MonoBehaviour
         scanning.SetActive(false);
     }
 
+    public void StartScanningUI()
+    {
+        scanning.SetActive(true);
+    }
+
     public void PlaceSelectedModel(GameObject model, string label)
     {      
         objectPlacer.GameObjectToPlace = model;

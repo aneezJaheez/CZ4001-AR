@@ -15,6 +15,8 @@ public class PlaceTrackedImages : MonoBehaviour
     ARRaycastManager arrayman;
     ARPlaneManager arplneman;
     bool object_generated, namecard_detection;
+    ModelSelector modelSelector;
+    ImagesAnimation images;
 
     // List of prefabs to instantiate - these should be named the same
     // as their corresponding 2D images in the reference image library 
@@ -35,6 +37,8 @@ public class PlaceTrackedImages : MonoBehaviour
     private void Start()
     {
         activateModel = FindObjectOfType<ARPlaceObjectsOnPlane>();
+        modelSelector = FindObjectOfType<ModelSelector>();
+        images = FindObjectOfType<ImagesAnimation>();
         arrayman = GetComponent<ARRaycastManager>();
         arplneman = GetComponent<ARPlaneManager>();
         arrayman.enabled = false;
@@ -54,7 +58,7 @@ public class PlaceTrackedImages : MonoBehaviour
     }
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-
+        int namecardavail = 0;
         foreach (var trackedImage in eventArgs.added)
         {
             var imageName = trackedImage.referenceImage.name;
@@ -68,11 +72,7 @@ public class PlaceTrackedImages : MonoBehaviour
                     arrayman.enabled = true;
                     arplneman.enabled = true;
 
-                    var images = FindObjectOfType<ImagesAnimation>();
-                    if (images != null) images.OpenImages();
-
                     // remove scanning UI
-                    var modelSelector = FindObjectOfType<ModelSelector>();
                     modelSelector.RemoveScanningUI();
                 }
 
@@ -101,6 +101,7 @@ public class PlaceTrackedImages : MonoBehaviour
                     button.SetActive(trackedImage.trackingState == TrackingState.Tracking);
                 }
             }
+            namecardavail += (trackedImage.trackingState == TrackingState.Tracking ? 0 : 1);
         }
 
         foreach (var trackedImage in eventArgs.removed)
@@ -111,7 +112,18 @@ public class PlaceTrackedImages : MonoBehaviour
             //_instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
             // Or, simply set the prefab instance to inactive
             _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
+            namecardavail++;
+        }
 
+        if (namecardavail > 0)
+        {
+            modelSelector.StartScanningUI();
+            images.CloseImages();
+        }
+        else
+        {
+            modelSelector.RemoveScanningUI();
+            images.OpenImages();
         }
     }
 

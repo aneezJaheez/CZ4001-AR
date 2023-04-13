@@ -33,22 +33,37 @@ public class TouchManager : MonoBehaviour
             switch (hit.collider.tag)
             {
                 case "paintingShoe":
-                    panelShoe.SetActive(true);
+                    if (!panelShoe.activeSelf)
+                        panelShoe.SetActive(true);
+                    else
+                        panelShoe.SetActive(false);
                     break;
                 case "paintingPort":
-                    panelPort.SetActive(true);
+                    if (!panelPort.activeSelf)
+                        panelPort.SetActive(true);
+                    else
+                        panelPort.SetActive(false);
                     break;
                 case "paintingSkull":
-                    panelSkull.SetActive(true);
+                    if (!panelSkull.activeSelf)
+                        panelSkull.SetActive(true);
+                    else
+                        panelSkull.SetActive(false);
                     break;
                 case "paintingField":
-                    panelField.SetActive(true);
+                    if (!panelField.activeSelf)
+                        panelField.SetActive(true);
+                    else
+                        panelField.SetActive(false);
                     break;
                 case "paintingStarry":
-                    panelStarry.SetActive(true);
+                    if (!panelStarry.activeSelf)
+                        panelStarry.SetActive(true);
+                    else
+                        panelStarry.SetActive(false);
                     break;
                 case "WebsiteURL":
-                    Application.OpenURL("https://www.nationalgallery.sg/");
+                    Application.OpenURL("https://www.vangoghmuseum.nl/en");
                     break;
                 default: break;
             }
