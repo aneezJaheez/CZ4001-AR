@@ -11,14 +11,13 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
     public GameObject GameObjectToPlace;
     public GameObject outline;
     public ResetSession resetSession;
+    public bool AllowObjectPlacement = false;
 
     ARRaycastManager m_RaycastManager;
-    public bool namecardDetected = false;
-    public bool objectGenerated = false;
     ARRaycastManager raycastManager;
     ARPlaneManager planeManager;
     Pose hitPlanePose;
-    bool allowObjectPlacement;
+    
 
     static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
 
@@ -43,46 +42,37 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
         LeanTouch.OnFingerTap -= HandleFingerTap;
     }
 
-    private void HandleFingerTap(LeanFinger _)
+    private void HandleFingerTap(LeanFinger finger)
     {
-        if (!allowObjectPlacement) return;
+        if (!AllowObjectPlacement) return;
 
-        // placing object if screen is touched
-        var gameObj = Instantiate(GameObjectToPlace, hitPlanePose.position, outline.transform.rotation);
-        gameObj.transform.localScale = outline.transform.localScale;
-        objectGenerated = true;
-        outline.SetActive(false);
+        var touchedRay = Camera.main.ScreenPointToRay(finger.ScreenPosition);
 
-        // to ensure reset works
-        resetSession.GameObjectToPlace = gameObj;
+        if (Physics.Raycast(touchedRay, out RaycastHit hit))
+        {
+            if (hit.collider != null && hit.transform.CompareTag("outline"))
+            {
+                // placing object if screen is touched
+                var gameObj = Instantiate(GameObjectToPlace, hitPlanePose.position, outline.transform.rotation);
+                gameObj.transform.localScale = outline.transform.localScale;
+                outline.SetActive(false);
+
+                // to ensure reset works
+                resetSession.placedObjects.Add(gameObj);
+
+                // register object for gaze
+                var gaze = GetComponent<Gaze>();
+                var info = gameObj.GetComponent<InfoBehaviour>();
+                if (info == null) print("info is null here");
+                gaze.AddInfo(info);
+
+                // remove until image tapped again
+                AllowObjectPlacement = false;
+                var modelSelector = FindObjectOfType<ModelSelector>();
+                modelSelector.currentLabel.SetActive(false);
+            }
+        }
     }
-
-    public void activate3DModels()
-    {
-        namecardDetected = true;
-    }
-
-    public void deactivate3DModels()
-    {
-        namecardDetected = false;
-    }
-
-    public void object_deactivate()
-    {
-        objectGenerated = false;
-    }
-
-
-    public bool returnObjectGenerated()
-    {
-        return objectGenerated;
-    }
-
-    public bool namecardDetection()
-    {
-        return namecardDetected;
-    }
-
 
     // Update is called once per frame
     void Update()
@@ -90,15 +80,13 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
         var screenCenter = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f));
         var rayHit = m_RaycastManager.Raycast(screenCenter, s_Hits, TrackableType.PlaneWithinPolygon);
 
-        if (rayHit && objectGenerated == false && namecardDetected == true)
+        if (rayHit && AllowObjectPlacement)
         {
             hitPlanePose = s_Hits[0].pose;
             UpdateOutline();
-            allowObjectPlacement = true;
         }
         else
         {
-            allowObjectPlacement = false;
             outline.SetActive(false);
         }
     }

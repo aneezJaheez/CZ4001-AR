@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class ButtonManager : MonoBehaviour
 {
-    public GameObject content;
+    public GameObject contents, cardAnimation;
+    public bool outOfView = true;
+
+    bool activate_contents = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        content.SetActive(false);
+        contents.SetActive(false);
+        cardAnimation.SetActive(false);
     }
 
     // Update is called once per frame
@@ -22,18 +26,30 @@ public class ButtonManager : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider != null)
+                if (hit.collider != null && hit.collider.tag == "Trigger")
                 {
-                    if (hit.collider.tag == "Trigger")
-                    {
-                        if (content.activeSelf == false)
-                            content.SetActive(true);
-                        else content.SetActive(false);
-
-
-                    }
+                    activate_contents = !activate_contents;
                 }
             }
+        }
+
+        if (activate_contents)
+        {
+            if (!cardAnimation.activeSelf)
+                cardAnimation.SetActive(true);
+            if (!outOfView && !contents.activeSelf)
+            {
+                contents.SetActive(true);
+            }
+            else if (outOfView)
+            {
+                contents.SetActive(false);
+            }
+        }
+        else
+        {
+            contents.SetActive(false);
+            cardAnimation.SetActive(false);
         }
     }
 }
