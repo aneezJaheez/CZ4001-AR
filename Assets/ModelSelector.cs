@@ -6,6 +6,7 @@ public class ModelSelector : MonoBehaviour
     public ARPlaceObjectsOnPlane objectPlacer;
     public GameObject currentLabel;
     public GameObject scanning;
+    public bool placingobject = false;
 
     ARPlaceObjectsOnPlane placerScript;
 
@@ -22,7 +23,8 @@ public class ModelSelector : MonoBehaviour
 
     public void StartScanningUI()
     {
-        scanning.SetActive(true);
+        if (!placingobject)
+            scanning.SetActive(true);
     }
 
     public void PlaceSelectedModel(GameObject model, string label)
@@ -32,5 +34,6 @@ public class ModelSelector : MonoBehaviour
         var text = currentLabel.GetComponent<TextMeshProUGUI>();
         text.text = string.Format("Placing {0}", label);
         currentLabel.SetActive(true);
+        placingobject = true;
     }
 }

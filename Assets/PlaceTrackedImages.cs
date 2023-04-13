@@ -118,7 +118,8 @@ public class PlaceTrackedImages : MonoBehaviour
         if (namecardavail > 0)
         {
             modelSelector.StartScanningUI();
-            images.CloseImages();
+            if (!modelSelector.placingobject)
+                images.CloseImages();
         }
         else
         {

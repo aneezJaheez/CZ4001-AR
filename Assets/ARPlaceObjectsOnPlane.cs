@@ -70,6 +70,7 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
                 AllowObjectPlacement = false;
                 var modelSelector = FindObjectOfType<ModelSelector>();
                 modelSelector.currentLabel.SetActive(false);
+                modelSelector.placingobject = false;
             }
         }
     }
