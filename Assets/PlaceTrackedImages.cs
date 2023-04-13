@@ -60,14 +60,20 @@ public class PlaceTrackedImages : MonoBehaviour
             var imageName = trackedImage.referenceImage.name;
             foreach (var curPrefab in ArPrefabs)
             {
-
-                if (string.Compare(curPrefab.name, imageName, StringComparison.OrdinalIgnoreCase) == 0 && !_instantiatedPrefabs.ContainsKey(imageName))
+                //string.Compare(curPrefab.name, imageName, StringComparison.OrdinalIgnoreCase) == 0 && 
+                if (!_instantiatedPrefabs.ContainsKey(imageName))
                 {
                     var newPrefab = Instantiate(curPrefab, trackedImage.transform);
                     _instantiatedPrefabs[imageName] = newPrefab;
                     arrayman.enabled = true;
                     arplneman.enabled = true;
-                    activateModel.activate3DModels();
+
+                    var images = FindObjectOfType<ImagesAnimation>();
+                    if (images != null) images.OpenImages();
+
+                    // remove scanning UI
+                    var modelSelector = FindObjectOfType<ModelSelector>();
+                    modelSelector.RemoveScanningUI();
                 }
 
             }
@@ -77,30 +83,25 @@ public class PlaceTrackedImages : MonoBehaviour
         foreach (var trackedImage in eventArgs.updated)
         {
             var imageName = trackedImage.referenceImage.name;
-            _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(trackedImage.trackingState == TrackingState.Tracking);
-
-            if (_instantiatedPrefabs.ContainsKey(imageName))
+            _instantiatedPrefabs[imageName].SetActive(true);
+            Transform trans = _instantiatedPrefabs[imageName].transform;
+            Transform childTrans = trans.Find("Sculptures");
+            Transform childTrans2 = trans.Find("Trigger_Script");
+            Transform childTrans3 = trans.Find("Trigger_Button");
+            GameObject sculpture, button, scriptObject;
+            if (childTrans != null)
             {
-                // if namecard reappears...
-                if (_instantiatedPrefabs[trackedImage.referenceImage.name].activeSelf == true) 
+                sculpture = childTrans.gameObject;
+                button = childTrans3.gameObject;
+                if (childTrans2 != null)
                 {
-                    activateModel.activate3DModels();
-
+                    scriptObject = childTrans2.gameObject;
+                    ButtonManager script = scriptObject.GetComponent<ButtonManager>();
+                    script.outOfView = !(trackedImage.trackingState == TrackingState.Tracking);
+                    button.SetActive(trackedImage.trackingState == TrackingState.Tracking);
                 }
-                object_generated = activateModel.returnObjectGenerated();
-                namecard_detection = activateModel.namecardDetection();
-
-                if (object_generated == false && namecard_detection == true)
-                {
-                    arrayman.enabled = true;
-                    arplneman.enabled = true;
-                    activateModel.activate3DModels();
-                }
-
             }
-
         }
-
 
         foreach (var trackedImage in eventArgs.removed)
         {

@@ -1,102 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-using TMPro;
+using Lean.Touch;
 
 public class TouchManager : MonoBehaviour
 {
-    public GameObject panelVideo, horse_model,panelArtwork;
-    //public TextMeshProUGUI text_change;
-    public ARSession session;
-    public GameObject GameObjectToPlace;
-    public ARCameraManager cam;
+    public GameObject panelPort, panelShoe, panelStarry, panelSkull, panelField;
+
     // Start is called before the first frame update
     void Start()
     {
-        panelVideo.SetActive(false);
-        horse_model.SetActive(false); 
-        panelArtwork.SetActive(false);
+        SetAllInactive();
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnEnable()
     {
-   
-        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) 
+        LeanTouch.OnFingerTap += CardTouchHandler;
+    }
+
+    void OnDisable()
+    {
+        LeanTouch.OnFingerTap -= CardTouchHandler;
+    }
+
+    void CardTouchHandler(LeanFinger finger)
+    {
+        var touchedRay = Camera.main.ScreenPointToRay(finger.ScreenPosition);
+        if (Physics.Raycast(touchedRay, out RaycastHit hit))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
-            RaycastHit hit;
-            
-            if (Physics.Raycast(ray, out hit)) 
+            if (hit.collider == null) return;
+            SetAllInactive();
+
+            switch (hit.collider.tag)
             {
-                if(hit.collider != null) 
-                {
-                    //Color newColor = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
-                    //hit.collider.GetComponent<MeshRenderer>().material.color = newColor;
-
-                    if (hit.collider.tag == "ArtworkVideo")
-                    {
-                        if (panelVideo.activeSelf == false)
-                        {
-                            panelVideo.SetActive(true);
-                            if (panelArtwork.activeSelf == true)
-                                panelArtwork.SetActive(false);
-                        }
-                        else panelVideo.SetActive(false);
-
-
-                    }
-
-                    else if (hit.collider.tag == "ArtworkPainting")
-                    {
-
-                        if (panelArtwork.activeSelf == false)
-                        {
-                            panelArtwork.SetActive(true);
-
-                            if (panelVideo.activeSelf == true)
-                                panelVideo.SetActive(false);
-                        }
-
-                        else panelArtwork.SetActive(false);
-                    }
-                    else if (hit.collider.tag == "Model")
-                    {
-                        if (horse_model.activeSelf == false)
-                        {
-                            horse_model.SetActive(true);
-                            panelArtwork.SetActive(false);
-                            panelVideo.SetActive(false);
-                        }
-
-                        else horse_model.SetActive(false);
-
-
-                    }
-
-
-                    else if (hit.collider.tag == "WebsiteURL")
-                    {
-
-                        if (panelVideo.activeSelf == true || panelArtwork.activeSelf == true)
-                            panelVideo.SetActive(false);
-                            panelArtwork.SetActive(false);
-
-                        Application.OpenURL("https://www.nationalgallery.sg/");
-                    }
-
-                    else if (hit.collider.tag == "LinkedIn")
-                    {
-                        if (panelVideo.activeSelf == true || panelArtwork.activeSelf == true)
-                            panelVideo.SetActive(false);
-                            panelArtwork.SetActive(false);
-                    }
-
-                }
+                case "paintingShoe":
+                    panelShoe.SetActive(true);
+                    break;
+                case "paintingPort":
+                    panelPort.SetActive(true);
+                    break;
+                case "paintingSkull":
+                    panelSkull.SetActive(true);
+                    break;
+                case "paintingField":
+                    panelField.SetActive(true);
+                    break;
+                case "paintingStarry":
+                    panelStarry.SetActive(true);
+                    break;
+                case "WebsiteURL":
+                    Application.OpenURL("https://www.nationalgallery.sg/");
+                    break;
+                default: break;
             }
         }
+    }
 
+    void SetAllInactive()
+    {
+        panelPort.SetActive(false);
+        panelShoe.SetActive(false);
+        panelStarry.SetActive(false);
+        panelSkull.SetActive(false);
+        panelField.SetActive(false);
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class NameCardAnimation : MonoBehaviour
 {
+    public GameObject contents;
+
     private List<InterpolationInfo> _childrenToMove = new();
     private float speed = 0.005f;
     private float rotationSpeed = 90.0f; // degs per sec
@@ -22,9 +24,9 @@ public class NameCardAnimation : MonoBehaviour
 
     void Awake()
     {
-        var middleCard = transform.GetChild(2).gameObject.transform;
-        var topCard = transform.GetChild(1).gameObject.transform;
-        var bottomCard = transform.GetChild(3).gameObject.transform;
+        var middleCard = contents.transform.GetChild(2).gameObject.transform;
+        var topCard = contents.transform.GetChild(1).gameObject.transform;
+        var bottomCard = contents.transform.GetChild(3).gameObject.transform;
         originalCardTransforms = new()
         {
             middleCard.localPosition,
@@ -33,16 +35,16 @@ public class NameCardAnimation : MonoBehaviour
         };
 
         for (int i = 4; i < 8; i++)
-            originalObjTransforms.Add(transform.GetChild(i).transform.localPosition);
+            originalObjTransforms.Add(contents.transform.GetChild(i).transform.localPosition);
     }
 
     void OnEnable()
     {
-        image = transform.GetChild(0).gameObject.transform;
+        image = contents.transform.GetChild(0).gameObject.transform;
         // for non-card objects
         _childrenToMove = new();
         for (int i = 4; i < 8; i++) {
-            var childTransform = transform.GetChild(i).transform;
+            var childTransform = contents.transform.GetChild(i).transform;
             _childrenToMove.Add(new InterpolationInfo(childTransform, image.localPosition, originalObjTransforms[i - 4]));
             childTransform.localPosition = image.localPosition; // reset to parent position
         }
@@ -50,18 +52,18 @@ public class NameCardAnimation : MonoBehaviour
 
         // for cards
         var firstAnchor = new GameObject().transform;
-        var middleCard = transform.GetChild(2).gameObject.transform;
-        firstAnchor.SetParent(transform, false);
+        var middleCard = contents.transform.GetChild(2).gameObject.transform;
+        firstAnchor.SetParent(contents.transform, false);
         firstAnchor.localPosition = Vector3.Lerp(image.localPosition, originalCardTransforms[0], 0.5f);
 
         var secondAnchor = new GameObject().transform;
-        var topCard = transform.GetChild(1).gameObject.transform;
-        secondAnchor.SetParent(transform, false);
+        var topCard = contents.transform.GetChild(1).gameObject.transform;
+        secondAnchor.SetParent(contents.transform, false);
         secondAnchor.localPosition = Vector3.Lerp(originalCardTransforms[0], originalCardTransforms[1], 0.5f);
 
         var thirdAnchor = new GameObject().transform;
-        var bottomCard = transform.GetChild(3).gameObject.transform;
-        thirdAnchor.SetParent(transform, false);
+        var bottomCard = contents.transform.GetChild(3).gameObject.transform;
+        thirdAnchor.SetParent(contents.transform, false);
         thirdAnchor.localPosition = Vector3.Lerp(originalCardTransforms[0], originalCardTransforms[2], 0.5f);
 
         middleCard.localPosition = image.localPosition;

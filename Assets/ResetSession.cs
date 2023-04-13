@@ -1,18 +1,19 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ResetSession : MonoBehaviour
 {
 
-    public GameObject GameObjectToPlace { get; set; }
+    public List<GameObject> placedObjects;
+
     // Start is called before the first frame update
-    public void resetSession()
+    public void Reset()
     {
         ARPlaceObjectsOnPlane activateModel;
         activateModel = FindObjectOfType<ARPlaceObjectsOnPlane>();
-        activateModel.deactivate3DModels();
-        activateModel.object_deactivate();
+        activateModel.AllowObjectPlacement = false;
 
-        if(GameObjectToPlace && GameObjectToPlace.activeSelf) 
-            GameObjectToPlace.SetActive(false);
+        placedObjects.ForEach(obj => { Destroy(obj); });
+        placedObjects = new List<GameObject>();
     }
 }
