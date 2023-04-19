@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.XR.Interaction.Toolkit.AR;
 
 [RequireComponent(typeof(ARRaycastManager))]
 
@@ -16,8 +17,9 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
     ARRaycastManager m_RaycastManager;
     ARRaycastManager raycastManager;
     ARPlaneManager planeManager;
+    XRPlacementInteraction placementinteractable;
     Pose hitPlanePose;
-    
+
 
     static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
 
@@ -25,6 +27,7 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
     {
         raycastManager = GetComponent<ARRaycastManager>();
         planeManager = GetComponent<ARPlaneManager>();
+        placementinteractable = FindObjectOfType<XRPlacementInteraction>();
     }
 
     private void Awake()
@@ -74,6 +77,23 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
         }
     }
 
+    public void handleObjPlacement()
+    {
+        //placementinteractable.tempObj.transform.localScale = outline.transform.localScale;
+        outline.SetActive(false);
+        resetSession.placedObjects.Add(placementinteractable.tempObj);
+        // register object for gaze
+        var gaze = GetComponent<Gaze>();
+        var info = placementinteractable.tempObj.GetComponent<InfoBehaviour>();
+        if (info == null) print("info is null here");
+        gaze.AddInfo(info);
+
+        // remove until image tapped again
+        AllowObjectPlacement = false;
+        var modelSelector = FindObjectOfType<ModelSelector>();
+        modelSelector.currentLabel.SetActive(false);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -84,6 +104,8 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
         {
             hitPlanePose = s_Hits[0].pose;
             UpdateOutline();
+            //placementinteractable.m_PlacementPrefab = GameObjectToPlace;
+            //placementinteractable.outline = outline;
         }
         else
         {
@@ -109,3 +131,5 @@ public class ARPlaceObjectsOnPlane : MonoBehaviour
         }
     }
 }
+
+
